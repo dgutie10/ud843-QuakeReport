@@ -70,7 +70,7 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         //Date Time population
         Date dateFormat = new Date(Long.parseLong(current.getDate()));
 
-        SimpleDateFormat dateFormatter =new SimpleDateFormat("MMM DD, yyyy");
+        SimpleDateFormat dateFormatter =new SimpleDateFormat("MMM dd, yyyy");
         TextView dateText =  (TextView) convertView.findViewById(R.id.date);
         dateText.setText(dateFormatter.format(dateFormat));
 
@@ -116,7 +116,6 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
                 magnitudeColorId = R.color.magnitude10plus;
                 break;
         }
-        Log.v("info","Color for "+Integer.toString(magnitudeFloor)+": "+Integer.toString(magnitudeColorId));
         return ContextCompat.getColor(getContext(),magnitudeColorId);
     }
 
