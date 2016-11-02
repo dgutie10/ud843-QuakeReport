@@ -15,7 +15,10 @@
  */
 package com.example.android.quakereport;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.LoaderManager;
@@ -42,6 +45,8 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
     private TextView emptyStateTextView;
 
+    private NetworkInfo networkInfo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
         earthquakeAdapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
         earthquakeListView.setAdapter(earthquakeAdapter);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkInfo = connectivityManager.getActiveNetworkInfo();
 
 
 
@@ -91,7 +99,16 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
-        emptyStateTextView.setText(R.string.no_earthqaukes);
+        // Hide loading indicator because the data has been loaded
+        View loadingIndicator = findViewById(R.id.loading_indicator);
+        loadingIndicator.setVisibility(View.GONE);
+
+        if (networkInfo != null && networkInfo.isConnected()){
+            emptyStateTextView.setText(R.string.no_earthqaukes);
+        }else {
+            emptyStateTextView.setText(R.string.no_connection);
+        }
+
         Log.i(LOG_TAG,"onLoadFinished initiated");
         earthquakeAdapter.clear();
         if (earthquakes != null && !earthquakes.isEmpty()) earthquakeAdapter.addAll(earthquakes);
